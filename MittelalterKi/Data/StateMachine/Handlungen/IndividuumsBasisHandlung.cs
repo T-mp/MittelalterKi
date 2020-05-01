@@ -25,10 +25,10 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
                 gb.Wert -= zeitEinheiten;
             }
 
-            var schlechte = grundBedürfnise.Where(b => b.Wert < b.Min);
+            var schlechte = grundBedürfnise.Where(b => b.Wert < b.SollMin);
             if (schlechte.Any())
             {
-                logger.LogDebug($"[{individuum.Name}].ReduziereGrundBedürfnise({zeitEinheiten}) => schlechte=[{string.Join(",", schlechte.Select(b => $"'{b.Name}':{b.Wert}<{b.Min}"))}]");
+                logger.LogDebug($"[{individuum.Name}].ReduziereGrundBedürfnise({zeitEinheiten}) => schlechte=[{string.Join(",", schlechte.Select(b => $"'{b.Name}':{b.Wert}<{b.SollMin}"))}]");
             }
             return schlechte;
         }

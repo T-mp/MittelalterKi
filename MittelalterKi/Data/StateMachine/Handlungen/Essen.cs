@@ -23,7 +23,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
                 if (narungsLager != null 
                  && narungsLager.Wert > 0)
                 {
-                    var braucht = narung.Max - narung.Wert + 1;
+                    var braucht = narung.SollMax - narung.Wert + 1;
                     var ausLager = System.Math.Min(braucht, narungsLager.Wert);
                     narungsLager.Wert -= ausLager;
                     narung.Wert += ausLager;
@@ -47,7 +47,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
                 return this;
             }
             if (narung != null
-                && narung.Wert >= narung.Max)
+                && narung.Wert >= narung.SollMax)
             {
                 logger.LogDebug($"[{individuum.Name}].Beende Essen");
                 return vorherigeAktion;

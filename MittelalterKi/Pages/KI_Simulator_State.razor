@@ -36,7 +36,7 @@
         <div class="container">
             @foreach (var individuum in individuen)
             {
-                <div class="row mb-1">
+                <div class="row">
                     <div class="col">
                         <p>@individuum.Name:</p>
                         <p>@individuum.Handlung</p>
@@ -44,8 +44,9 @@
                     @foreach (var bedürfnis in individuum.Bedürfnise)
                     {
                         <div class="col">
-                            <p>@bedürfnis.Name: @bedürfnis.Wert</p>
-                            <p>(@bedürfnis.Min/@bedürfnis.Max)</p>
+                            <p>@bedürfnis.Name@@@bedürfnis.Stärke.ToString("0.00"): @bedürfnis.Wert</p>
+                            <p>@bedürfnis.SollMin/@bedürfnis.SollMax</p>
+                            <p>@bedürfnis.Min/@bedürfnis.Max</p>
                         </div>
                     }
                 </div>
@@ -155,7 +156,7 @@
 
     private bool _simulationAktiv;
 
-    int geschwindigkeitSimulation = 10;
+    int geschwindigkeitSimulation = 1;
 
 
     private async Task Simulation()

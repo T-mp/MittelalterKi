@@ -31,17 +31,17 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
             if (energi==null
              || narungsLager == null
              || energi.Wert <= 0 
-             || (energi.Wert < 30 && narungsLager.Wert < narungsLager.Min)
-             || narungsLager.Wert >= narungsLager.Max)
+             || (energi.Wert < 30 && narungsLager.Wert < narungsLager.SollMin)
+             || narungsLager.Wert >= narungsLager.SollMax)
             {
                 return vorherigeAktion;
             }
 
             narungsLager.Wert += rnd.Next(0,10);
             energi.Wert -= rnd.Next(1, 3);
-            if (narungsLager.Wert >= narungsLager.Max)
+            if (narungsLager.Wert >= narungsLager.SollMax)
             {
-                narungsLager.Wert = narungsLager.Max;
+                narungsLager.Wert = narungsLager.SollMax;
                 return vorherigeAktion;
             }
 

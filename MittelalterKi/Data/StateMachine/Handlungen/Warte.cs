@@ -24,14 +24,15 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
             {
                 return new Essen(individuum, this, logger);
             }
+
             var energi = individuum.Bedürfnise.FirstOrDefault(b => b.Name == "Energi");
             var narung = individuum.Bedürfnise.FirstOrDefault(b => b.Name == "Narung");
-            if (energi != null && energi.Wert < energi.Max)
+            if (energi != null && energi.Wert < energi.SollMax)
             {
                 energi.Wert += rnd.Next(0, (int)(narung.Wert/10));
-                if (energi.Wert > energi.Max)
+                if (energi.Wert > energi.SollMax)
                 {
-                    energi.Max = energi.Wert;
+                    energi.SollMax = energi.Wert;
                 }
             }
 

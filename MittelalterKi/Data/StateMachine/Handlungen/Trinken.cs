@@ -33,7 +33,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
                 return new Essen(individuum, this, logger);
             }
             if (wasser != null
-                && wasser.Wert > (wasser.Max / 100) * 80)
+                && wasser.Wert > (wasser.SollMax / 100) * 80)
             {
                 logger.LogDebug($"[{individuum.Name}].Beende Trinken");
                 return vorherigeAktion;
