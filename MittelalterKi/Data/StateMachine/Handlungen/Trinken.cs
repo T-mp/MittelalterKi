@@ -8,7 +8,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
     {
         public Trinken(Individuum individuum, IHandlung vorherigeAktion, ILogger logger) : base(individuum, vorherigeAktion, logger)
         {
-            logger.LogDebug($"[{individuum.Name}].Beginne Trinken");
+            logger.LogDebug($"[{individuum.Name}] {vorherigeAktion?.GetType()?.Name} => Trinken.Begin");
         }
 
 #pragma warning disable CS1998 // Bei der asynchronen Methode fehlen "await"-Operatoren. Die Methode wird synchron ausgeführt. Ist einen enfache implementierung ohne asyncrone Vorgänge
@@ -35,7 +35,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
             if (wasser != null
                 && wasser.Wert > (wasser.SollMax / 100) * 80)
             {
-                logger.LogDebug($"[{individuum.Name}].Beende Trinken");
+                logger.LogDebug($"[{individuum.Name}] Trinken.Ende => {vorherigeAktion?.GetType()?.Name}");
                 return vorherigeAktion;
             }
 

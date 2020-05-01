@@ -156,7 +156,7 @@
 
     private bool _simulationAktiv;
 
-    int geschwindigkeitSimulation = 1;
+    int geschwindigkeitSimulation = 10;
 
 
     private async Task Simulation()
@@ -186,8 +186,8 @@
     {
         Logger = new WebLogger<EinIndividuum>(s => AddLog(s));
         individuen.Add(new EinIndividuum(Logger, null));
-        individuen.Add(new EinIndividuum(Logger, null));
-        individuen.Add(new EinIndividuum(Logger, null));
+        //individuen.Add(new EinIndividuum(Logger, null));
+        //individuen.Add(new EinIndividuum(Logger, null));
         StateHasChanged();
     }
 }

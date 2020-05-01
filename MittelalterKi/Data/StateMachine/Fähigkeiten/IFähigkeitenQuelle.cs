@@ -2,6 +2,7 @@
 {
     public interface IFähigkeitenQuelle
     {
+
     }  
     public interface IFähigkeit
     {
