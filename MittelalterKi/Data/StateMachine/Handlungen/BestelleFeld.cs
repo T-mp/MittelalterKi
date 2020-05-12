@@ -9,7 +9,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
         private static readonly System.Random rnd = new System.Random();
 
         public BestelleFeld(Individuum individuum, IHandlung vorherigeAktion, ILogger logger) : base(individuum, vorherigeAktion, logger) {
-            logger.LogDebug($"[{individuum.Name}] {vorherigeAktion?.GetType()?.Name} => BestelleFeld.Begin");
+            logger.LogDebug($"{individuum} {vorherigeAktion?.GetType()?.Name} => BestelleFeld.Begin");
         }
 
 #pragma warning disable CS1998 // Bei der asynchronen Methode fehlen "await"-Operatoren. Die Methode wird synchron ausgeführt. Ist einen enfache implementierung ohne asyncrone Vorgänge
@@ -36,7 +36,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
              || (energi.Wert < 30 && narungsLager.Wert < narungsLager.SollMin)
              || narungsLager.Wert >= narungsLager.SollMax)
             {
-                logger.LogDebug($"[{individuum.Name}].Beende BestelleFeld => {vorherigeAktion?.GetType()?.Name}");
+                logger.LogDebug($"{individuum}.Beende BestelleFeld => {vorherigeAktion?.GetType()?.Name}");
                 return vorherigeAktion;
             }
 
@@ -45,7 +45,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
             if (narungsLager.Wert >= narungsLager.SollMax)
             {
                 narungsLager.Wert = narungsLager.SollMax;
-                logger.LogDebug($"[{individuum.Name}] BestelleFeld.Ende => {vorherigeAktion?.GetType()?.Name}");
+                logger.LogDebug($"{individuum} BestelleFeld.Ende => {vorherigeAktion?.GetType()?.Name}");
                 return vorherigeAktion;
             }
 

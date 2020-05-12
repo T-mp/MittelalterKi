@@ -28,7 +28,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
             var schlechte = grundBedürfnise.Where(b => b.Wert < b.SollMin);
             if (schlechte.Any())
             {
-                logger.LogDebug($"[{individuum.Name}].ReduziereGrundBedürfnise({zeitEinheiten}) => schlechte=[{string.Join(",", schlechte.Select(b => $"'{b.Name}':{b.Wert}<{b.SollMin}"))}]");
+                logger.LogDebug($"{individuum}.ReduziereGrundBedürfnise({zeitEinheiten}) => schlechte=[{string.Join(",", schlechte.Select(b => $"'{b.Name}':{b.Wert}<{b.SollMin}"))}]");
             }
             return schlechte;
         }

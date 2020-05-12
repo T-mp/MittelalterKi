@@ -45,4 +45,8 @@
 
         public string Name { get; }
     }
+
+    public class GrundBedürfnis:Bedürfnis, IGrundBedürfnis {
+        public GrundBedürfnis(string name, decimal staertWert = 50, decimal gewicht = 1) : base(name, staertWert, gewicht) { }
+    }
 }

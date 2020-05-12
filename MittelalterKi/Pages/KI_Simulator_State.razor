@@ -4,7 +4,10 @@
 @using System.Collections.Generic;
 @using MittelalterKi.Data;
 @using MittelalterKi.Data.StateMachine;
-
+@using MittelalterKi.Data.StateMachine.Umgebung;
+@using MittelalterKi.Data.StateMachine.Materialien;
+@using MittelalterKi.Data.StateMachine.Bedürfnise;
+@using System.Globalization;
 
 @*<input id="geschwindigkeit" type="number" @bind="geschwindigkeitSimulation" />*@ @*Geschwindigkeit der Simulation*@
 <!doctype html>
@@ -33,84 +36,283 @@
                 </div>
             </div>
         </div>
-        <div class="container">
-            @foreach (var individuum in individuen)
+
+        <div class="container Landschaft">
+
+            @foreach (var uo in Umgebung)
             {
-                <div class="row">
-                    <div class="col">
-                        <p>@individuum.Name:</p>
-                        <p>@individuum.Handlung</p>
-                    </div>
-                    @foreach (var bedürfnis in individuum.Bedürfnise)
-                    {
-                        <div class="col">
-                            <p>@bedürfnis.Name@@@bedürfnis.Stärke.ToString("0.00"): @bedürfnis.Wert</p>
-                            <p>@bedürfnis.SollMin/@bedürfnis.SollMax</p>
-                            <p>@bedürfnis.Min/@bedürfnis.Max</p>
-                        </div>
-                    }
+                <div class="umgebung" style="top:@(uo.Y)px; left:@(uo.X)px;">
+                    @uo.Bild
+                    <tooltip>
+                        <ul class="bietet">
+                            @foreach (var m in uo.Bietet)
+                            {
+                                <li>
+                                    @m.Bild
+                                    <ul class="befridigt">
+                                        @foreach (var b in m.Befridigt)
+                                        {
+                                            <li>@b.Name:@b.Wert</li>
+                                        }
+                                    </ul>
+                                    <ul class="braucht">
+                                        @foreach (var b in m.Braucht)
+                                        {
+                                            <li>@b.Name:@b.Menge</li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        </ul>
+                    </tooltip>
                 </div>
             }
+            @foreach (var individuum in individuen)
+            {
+                <div class="individuum" style="top:@(individuum.Y)px; left:@(individuum.X)px;">
+                    <div style="position:absolute; width:100%; height:100%;">@individuum.Id</div>
+
+                    <div class="status">
+                        @{
+                            var gbs = individuum.Bedürfnise.Where(b => b is IGrundBedürfnis).ToList();
+                            @foreach (var bedürfnis in gbs)
+                            {
+                                var min = bedürfnis.Min ?? bedürfnis.SollMin;
+                                var max = bedürfnis.Max ?? bedürfnis.SollMax;
+                                var div = max - min;
+                                var norm = bedürfnis.Wert - min;
+
+                                <div class="bedürfnis" style='height:100%; width:@((100/gbs.Count).ToString("0.00", CultureInfo.InvariantCulture))%;'>
+                                    <div class="wert" style='background-color:red;'>
+                                        <div style='height:@((100-(norm/max*100)).ToString("0.00", CultureInfo.InvariantCulture))%;'>.</div>
+                                    </div>
+                                    <div class="stärke" style='background-color:blue;'>
+                                        <div style='height:@(((1-(bedürfnis.Stärke))*100).ToString("0.00", CultureInfo.InvariantCulture))%; '>.</div>
+                                    </div>
+                                    <tooltip>
+                                        <p>@bedürfnis.Name@@@bedürfnis.Stärke.ToString("0.00"): @bedürfnis.Wert</p>
+                                        <p>@bedürfnis.SollMin/@bedürfnis.SollMax</p>
+                                        <p>@bedürfnis.Min/@bedürfnis.Max</p>
+                                    </tooltip>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <tooltip>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-1">
+                                    <p>@individuum</p>
+                                    <p>@individuum.BazeichnungAktuelleHandlung</p>
+                                </div>
+                                <div class="col-11">
+                                    <div class="row">
+                                        <div class="col">Bedürfnise:</div>
+                                        @foreach (var bedürfnis in individuum.Bedürfnise)
+                                        {
+                                            <div class="col">
+                                                <p>@bedürfnis.Name@@@bedürfnis.Stärke.ToString("0.00"): @bedürfnis.Wert</p>
+                                                <p>@bedürfnis.SollMin/@bedürfnis.SollMax</p>
+                                                <p>@bedürfnis.Min/@bedürfnis.Max</p>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">Fähigkeiten:</div>
+                                        @foreach (var fähigkeit in individuum.Fähigkeiten)
+                                        {
+                                            <div class="col">
+                                                <p>@fähigkeit</p>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">Zustände:</div>
+                                        @foreach (var zustand in individuum.Zustände)
+                                        {
+                                            <div class="col">
+                                                <p>@zustand</p>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </tooltip>
+                </div>
+            }
+
         </div>
     </div>
 
     <style>
-        li.Trace {
-            font-size: 0.5em;
-            color: lightgray;
+        .Landschaft {
+            position: relative;
+            border: black solid 1px;
+            width: 100vw;
+            height: 70vh;
         }
 
-            li.Trace > * {
+            .Landschaft > * {
+                position: absolute;
+                display: block;
+                border: outset 2px;
+                margin: auto;
+                text-align: center;
+                width: 1.5rem;
+                height: 1.5rem;
+                line-height: 1.5rem;
+            }
+
+                .Landschaft > * > * {
+                    line-height: normal;
+                }
+
+
+
+            .Landschaft .umgebung {
+            }
+
+                .Landschaft .umgebung .bietet {
+                    padding-left: 1.5em;
+                    padding-inline-start: 1.5em;
+                }
+
+                    .Landschaft .umgebung .bietet ul {
+                        padding-left: .5em;
+                        padding-inline-start: .5em;
+                        font-size: xx-small;
+                        margin: 0;
+                    }
+
+                        .Landschaft .umgebung .bietet ul.befridigt {
+                            list-style-type: "+";
+                            color: green;
+                        }
+
+                        .Landschaft .umgebung .bietet ul.braucht {
+                            list-style-type: "-";
+                            color: red;
+                        }
+
+            .Landschaft .individuum {
+            }
+
+                .Landschaft .individuum .status {
+                    height: 100%;
+                    width: 100%;
+                }
+
+                    .Landschaft .individuum .status .bedürfnis {
+                        float: left;
+                    }
+
+                        .Landschaft .individuum .status .bedürfnis .wert,
+                        .Landschaft .individuum .status .bedürfnis .stärke {
+                            font-size: 1px;
+                            line-height: 1px;
+                            color: transparent;
+                            float: left;
+                            height: 100%;
+                            width: 50%;
+                            padding: 0;
+                        }
+
+                            .Landschaft .individuum .status .bedürfnis .wert > div,
+                            .Landschaft .individuum .status .bedürfnis .stärke > div {
+                                background-color: white;
+                                width: 100%;
+                                margin: 0;
+                            }
+
+        tooltip {
+            display: none;
+            position: absolute;
+            z-index: 1;
+            line-height: normal;
+            font-size: x-small;
+            border: 1px dotted black;
+            background-color: white;
+        }
+
+            tooltip li {
+                text-align: unset;
+            }
+
+            tooltip p {
+                margin: 0;
+            }
+
+            tooltip .row {
+                flex-wrap: unset;
+                border: 1px dotted black;
+            }
+
+        *:hover > tooltip {
+            display: block;
+        }
+
+
+        .log {
+        }
+
+            .log li.Trace {
+                font-size: 0.5em;
                 color: lightgray;
             }
 
-        li.Debug {
-            font-size: 0.6em;
-        }
+                .log li.Trace > * {
+                    color: lightgray;
+                }
 
-            li.Debug > * {
+            .log li.Debug {
+                font-size: 0.6em;
             }
 
-        li.Information {
-            font-size: 0.7em;
-            color: blue;
-        }
+                .log li.Debug > * {
+                }
 
-            li.Information > * {
+            .log li.Information {
+                font-size: 0.7em;
                 color: blue;
             }
 
-        li.Warning {
-            font-size: 1em;
-            background-color: yellow;
-        }
+                .log li.Information > * {
+                    color: blue;
+                }
 
-            li.Warning > * {
+            .log li.Warning {
+                font-size: 1em;
                 background-color: yellow;
             }
 
-        li.Error {
-            font-size: 1em;
-            background-color: red
-        }
+                .log li.Warning > * {
+                    background-color: yellow;
+                }
 
-            li.Error > * {
+            .log li.Error {
+                font-size: 1em;
                 background-color: red
             }
 
-        li.Critical {
-            font-size: 1.5em;
-            background-color: yellow;
-            color: purple;
-        }
+                .log li.Error > * {
+                    background-color: red
+                }
 
-        li.Critical {
-            color: purple;
-        }
+            .log li.Critical {
+                font-size: 1.5em;
+                background-color: yellow;
+                color: purple;
+            }
+
+            .log li.Critical {
+                color: purple;
+            }
     </style>
     <div class="w-25 h-auto float-left mt-5 border">
         <div class="row mb-1">
-            <ul>
+            <ul class="log">
                 @foreach (var item in VerlaufHystorienListe)
                 {
                     <li class="@item.LogLevel">
@@ -127,6 +329,7 @@
 @code {
 
     public List<Individuum> individuen = new List<Individuum>();
+    public List<IUmgebung> Umgebung = new List<IUmgebung>();
 
     public WebLogger<EinIndividuum> Logger;
     public void AddLog(WebLoggerEintrag logText)
@@ -168,7 +371,7 @@
         {
             foreach (var i in individuen)
             {
-                await i.BerechneNächstenZustand(1);
+                await i.BerechneNächsteHandlung(1);
             }
             StateHasChanged();
 
@@ -184,8 +387,14 @@
 
     protected override void OnInitialized()
     {
+        Umgebung.Add(new Brunnen(600, 200));
+        Umgebung.Add(new Brunnen(300, 5));
+        Umgebung.Add(new Bananenstaude(200, 400));
+        //Umgebung.Add(new Umgebung(100, 200, new Wassermelone()));
+
+
         Logger = new WebLogger<EinIndividuum>(s => AddLog(s));
-        individuen.Add(new EinIndividuum(Logger, null));
+        individuen.Add(new EinIndividuum(Logger) { Umgebung = Umgebung });
         //individuen.Add(new EinIndividuum(Logger, null));
         //individuen.Add(new EinIndividuum(Logger, null));
         StateHasChanged();

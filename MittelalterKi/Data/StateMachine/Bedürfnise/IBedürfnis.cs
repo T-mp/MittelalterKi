@@ -15,4 +15,5 @@ namespace MittelalterKi.Data.StateMachine.Bedürfnise
 
         string Name { get; }
     }
+    public interface IGrundBedürfnis: IBedürfnis { }
 }

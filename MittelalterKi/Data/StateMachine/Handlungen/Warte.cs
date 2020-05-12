@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using MittelalterKi.Data.StateMachine.Umgebung;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -46,6 +47,22 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
             }
 
             return this;
+        }
+    }
+
+    public class Bewegen: IndividuumsBasisSubHandlung
+    {
+        private readonly IHandlung beabsichtigt;
+        private readonly IUmgebung ziel;
+
+        public Bewegen(Individuum individuum, IHandlung vorherigeAktion, IHandlung beabsichtigt, IUmgebung ziel, ILogger logger) : base(individuum, vorherigeAktion, logger) {
+            this.beabsichtigt = beabsichtigt;
+            this.ziel = ziel;
+        }
+
+        public override Task<IHandlung> BerechneNächste(decimal zeitEinheiten = 1)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

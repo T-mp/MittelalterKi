@@ -9,7 +9,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
 
         public Essen(Individuum individuum, IHandlung vorherigeAktion, ILogger logger) : base(individuum, vorherigeAktion, logger)
         {
-            logger.LogDebug($"[{individuum.Name}] {vorherigeAktion?.GetType()?.Name} => Essen.Begin");
+            logger.LogDebug($"{individuum} {vorherigeAktion?.GetType()?.Name} => Essen.Begin");
         }
 
 #pragma warning disable CS1998 // Bei der asynchronen Methode fehlen "await"-Operatoren. Die Methode wird synchron ausgeführt. Ist einen enfache implementierung ohne asyncrone Vorgänge
@@ -49,7 +49,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
             if (narung != null
                 && narung.Wert >= narung.SollMax)
             {
-                logger.LogDebug($"[{individuum.Name}] Essen.Ende => {vorherigeAktion?.GetType()?.Name}");
+                logger.LogDebug($"{individuum} Essen.Ende => {vorherigeAktion?.GetType()?.Name}");
                 return vorherigeAktion;
             }
 
